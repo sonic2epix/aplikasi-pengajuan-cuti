@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.artivisi.aplikasi.pengajuan.cuti.EntryCutiReal;
 import com.artivisi.aplikasi.pengajuan.cuti.MasterHariLibur;
@@ -13,9 +14,10 @@ import com.artivisi.aplikasi.pengajuan.cuti.Pegawai;
 import com.artivisi.aplikasi.pengajuan.cuti.PengajuanCuti;
 import com.artivisi.aplikasi.pengajuan.cuti.service.AppService;
 
+@Transactional
 @Service("appService")
 public class AppServiceImpl implements AppService {
-	@Autowired SessionFactory sessionFactory;
+	@Autowired private SessionFactory sessionFactory;
 	
 	@Override
 	public void savePegawai(Pegawai p) {
@@ -142,6 +144,14 @@ public class AppServiceImpl implements AppService {
 		.createQuery("From PengajuanCuti pc where pc.approve=true")
 		.list();
 		
+	}
+
+	@Override
+	public MasterKonfig getKonfig() {
+		return (MasterKonfig) sessionFactory.getCurrentSession()
+		.createQuery("From MasterKonfig mk")
+		.setMaxResults(1)
+		.uniqueResult();
 	}
 
 }
